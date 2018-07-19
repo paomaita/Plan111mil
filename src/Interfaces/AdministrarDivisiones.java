@@ -5,6 +5,8 @@
  */
 package Interfaces;
 
+import Entidades.Divisiones;
+
 /**
  *
  * @author Usuario
@@ -327,10 +329,14 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
         // TODO add your handling code here:
-        String nombredivision= this.n.txtcurso.getText();
-        int idperiodolectivo=this.cbxcurso.getSelectedIndex();
-        Cursos c1=new Cursos(nombrecurso, idperiodolectivo);
-        c1.registrarCurso();
+        String nombredivision= this.txtnombredivision.getText();
+        int idcurso=this.cbxcurso.getSelectedIndex();
+        int idpreceptor=this.cbxpreceptor.getSelectedIndex();
+        int idturno=this.cbxturno.getSelectedIndex();
+        int idaula=this.cbxaula.getSelectedIndex();
+        
+        Divisiones d1=new Divisiones(idcurso,idpreceptor,idturno,nombredivision,idaula);
+        d1.registrarDivision();
 
     }//GEN-LAST:event_btnagregarActionPerformed
 

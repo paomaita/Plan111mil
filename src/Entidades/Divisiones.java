@@ -27,6 +27,13 @@ public class Divisiones {
         this.nombredivision = nombredivision;
         this.idaula = idaula;
     }
+     public Divisiones(int idcursos, int idpreceptor, int idturno, String nombredivision, int idaula) {
+        this.idcursos = idcursos;
+        this.idpreceptor = idpreceptor;
+        this.idturno = idturno;
+        this.nombredivision = nombredivision;
+        this.idaula = idaula;
+    }
 
     public int getIddivision() {
         return iddivision;
