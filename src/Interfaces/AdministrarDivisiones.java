@@ -5,20 +5,46 @@
  */
 package Interfaces;
 
+import Conexion.ConexionBase;
 import Entidades.Divisiones;
-
+import java.sql.*;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Usuario
  */
 public class AdministrarDivisiones extends javax.swing.JFrame {
+     ConexionBase con= new ConexionBase();
+     Connection base=con.getConection();
+     //private int iddivision;  
 
     /**
      * Creates new form AdministrarDivisiones
      */
     public AdministrarDivisiones() {
         initComponents();
+        CargarComboxs(cbxcurso, "SELECT * FROM cursos");
+        CargarComboxs(cbxaula, "SELECT * FROM aula");
+        CargarComboxs(cbxturno, "SELECT * FROM turnos");
+        CargarComboxs(cbxpreceptor, "SELECT * FROM VistaPreceptor");
+        
     }
+    
+    public void CargarComboxs(javax.swing.JComboBox micombobox, String consulta){
+        try {
+            Statement St=base.createStatement(); 
+            ResultSet Resultado=St.executeQuery(consulta);
+            
+            this.micombobox.removeAllItems();
+            this.micombobox.addItem("seleccionar");//
+            while (Resultado.next()){   
+                this.micombobox.addItem(Resultado.getString(2));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        } 
+    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
