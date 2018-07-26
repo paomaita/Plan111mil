@@ -86,20 +86,21 @@ public class Divisiones {
      public void registrarDivision(){
          
         try {
-            Connection base=con.getConection();
+            Connection base=ConexionBase.conexion;
             
-            PreparedStatement valores=base.prepareStatement("INSERT INTO divisiones (iddivision, idcursos, idpreceptor, idturno, nombredivision, idaula)"
-                    + " VALUES (?,?,?,?,?,?)");
-            valores.setInt(1,iddivision);
-            valores.setInt(2,idcursos);
-            valores.setInt(3,idpreceptor);
-            valores.setInt(4,idturno);
-            valores.setString(5,nombredivision);
-            valores.setInt(6,idaula);
+            PreparedStatement valores=base.prepareStatement("INSERT INTO division (idcursos, idpreceptor, idturno, nombredivision, idaula)"
+                    + " VALUES (?,?,?,?,?)");
+            //valores.setInt(1,iddivision);
+            valores.setInt(1,idcursos);
+            valores.setInt(2,idpreceptor);
+            valores.setInt(3,idturno);
+            valores.setString(4,nombredivision);
+            valores.setInt(5,idaula);
             valores.executeUpdate();
-             JOptionPane.showMessageDialog(null,"Se registro la Division con exito");
+            JOptionPane.showMessageDialog(null,"Se registro la Division con exito");
+            
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(null, ex);;
+             JOptionPane.showMessageDialog(null, ex);
         }
     
 }

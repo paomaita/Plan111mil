@@ -9,6 +9,7 @@ import Conexion.ConexionBase;
 import Entidades.Divisiones;
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Usuario
@@ -16,7 +17,7 @@ import javax.swing.JOptionPane;
 public class AdministrarDivisiones extends javax.swing.JFrame {
      ConexionBase con= new ConexionBase();
      Connection base=con.getConection();
-     //private int iddivision;  
+     private int iddivision;  
 
     /**
      * Creates new form AdministrarDivisiones
@@ -27,6 +28,7 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
         CargarComboxs(cbxaula, "SELECT * FROM aula");
         CargarComboxs(cbxturno, "SELECT * FROM turnos");
         CargarComboxs(cbxpreceptor, "SELECT * FROM VistaPreceptor");
+        ListarDivisiones();
         
     }
     
@@ -35,14 +37,39 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
             Statement St=base.createStatement(); 
             ResultSet Resultado=St.executeQuery(consulta);
             
-            this.micombobox.removeAllItems();
-            this.micombobox.addItem("seleccionar");//
+            micombobox.removeAllItems();
+            micombobox.addItem("seleccionar");//
             while (Resultado.next()){   
-                this.micombobox.addItem(Resultado.getString(2));
+                micombobox.addItem(Resultado.getString(2));
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex);
         } 
+    }
+    public void ListarDivisiones(){
+         try { 
+            //esta def va antes de la consulta sql: (sino error)
+            DefaultTableModel Modelo= (DefaultTableModel) this.tbldivisiones.getModel();
+            Modelo.setNumRows(0);
+            
+            Statement St=base.createStatement();
+            ResultSet Resultado=St.executeQuery("SELECT * FROM ListaDivisiones");
+            
+            String[]fila=new String[6];
+            while(Resultado.next()){
+                fila[0]=Resultado.getString(1);
+                fila[1]=Resultado.getString(2);
+                fila[2]=Resultado.getString(3);
+                fila[3]=Resultado.getString(5);
+                fila[4]=Resultado.getString(4);
+                fila[5]=Resultado.getString(6);
+                Modelo.addRow(fila);
+            
+            this.tbldivisiones.setModel(Modelo);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
    
 
@@ -58,10 +85,12 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
         tabdivisiones = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tblcursos = new javax.swing.JTable();
+        tbldivisiones = new javax.swing.JTable();
         btnlinkagregar = new javax.swing.JButton();
         btnlinkmodificar = new javax.swing.JButton();
         btneliminar = new javax.swing.JButton();
+        txtaño = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         txtnombredivision = new javax.swing.JTextField();
@@ -76,17 +105,23 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
         cbxturno = new javax.swing.JComboBox<>();
         cbxaula = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        txtcursomodif = new javax.swing.JTextField();
-        cbxperiodo = new javax.swing.JComboBox<>();
         btncancelarmodif = new javax.swing.JButton();
         btnmodificar = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        cbxcurso1 = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        cbxturno1 = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        txtnombredivision1 = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        cbxpreceptor1 = new javax.swing.JComboBox<>();
+        jLabel14 = new javax.swing.JLabel();
+        cbxaula1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        tblcursos.setModel(new javax.swing.table.DefaultTableModel(
+        tbldivisiones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -97,7 +132,7 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
                 "Id Div.", "Division", "Curso", "Turno", "Preceptor", "Aula"
             }
         ));
-        jScrollPane2.setViewportView(tblcursos);
+        jScrollPane2.setViewportView(tbldivisiones);
 
         btnlinkagregar.setText("Agregar");
         btnlinkagregar.addActionListener(new java.awt.event.ActionListener() {
@@ -115,28 +150,46 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
 
         btneliminar.setText("Eliminar");
 
+        txtaño.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtañoActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setText("Año:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(113, Short.MAX_VALUE)
-                .addComponent(btnlinkagregar)
+                .addContainerGap(73, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtaño, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(16, 16, 16))
+                    .addComponent(btnlinkagregar))
                 .addGap(18, 18, 18)
                 .addComponent(btnlinkmodificar)
                 .addGap(18, 18, 18)
                 .addComponent(btneliminar)
                 .addGap(57, 57, 57))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(35, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(34, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(166, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtaño, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 135, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnlinkagregar)
                     .addComponent(btnlinkmodificar)
@@ -144,8 +197,8 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(39, 39, 39)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(63, Short.MAX_VALUE)))
         );
 
@@ -166,15 +219,11 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
 
         jLabel2.setText("Preceptor:");
 
-        cbxpreceptor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel4.setText("Turno:");
 
         jLabel7.setText("Aula:");
 
-        cbxturno.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        cbxaula.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxturno.setToolTipText("");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -243,10 +292,6 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
 
         tabdivisiones.addTab("Agregar Division", jPanel2);
 
-        jLabel6.setText("Nombre Curso:");
-
-        cbxperiodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btncancelarmodif.setText("Cancelar");
 
         btnmodificar.setText("Modificar");
@@ -256,7 +301,17 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("Periodo Nuevo:");
+        jLabel10.setText("Curso:");
+
+        jLabel11.setText("Turno:");
+
+        cbxturno1.setToolTipText("");
+
+        jLabel12.setText("Nombre Division:");
+
+        jLabel13.setText("Preceptor:");
+
+        jLabel14.setText("Aula:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -265,37 +320,61 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cbxperiodo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(txtcursomodif, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGap(99, 99, 99)
-                                    .addComponent(btncancelarmodif)))))
+                        .addGap(109, 109, 109)
+                        .addComponent(btncancelarmodif))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(187, 187, 187)
-                        .addComponent(btnmodificar)))
-                .addContainerGap(159, Short.MAX_VALUE))
+                        .addComponent(btnmodificar))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbxpreceptor1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbxcurso1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbxaula1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                        .addGap(14, 14, 14)
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbxturno1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtnombredivision1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtcursomodif, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel10)
+                    .addComponent(cbxcurso1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(cbxturno1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxperiodo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                    .addComponent(jLabel12)
+                    .addComponent(txtnombredivision1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(cbxpreceptor1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
+                    .addComponent(cbxaula1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnmodificar)
                     .addComponent(btncancelarmodif))
@@ -341,16 +420,26 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
 
     private void btnlinkmodificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlinkmodificarActionPerformed
         // TODO add your handling code here:
-       /* int fila= this.tblcursos.getSelectedRow();
-        idcurso=Integer.valueOf(this.tblcursos.getValueAt(fila, 0).toString());
-        String curso=(String) this.tblcursos.getValueAt(fila, 1);
-        String periodo=this.tblcursos.getValueAt(fila, 2).toString();
-        this.cbxperiodo.setModel(this.cbxidperiodo.getModel());
-        this.cbxperiodo.setSelectedItem(periodo);//me muestra el periodo actual
-        this.txtcursomodif.setText(curso);
-
+        int fila= this.tbldivisiones.getSelectedRow();
+        iddivision=Integer.valueOf(this.tbldivisiones.getValueAt(fila, 0).toString());
+        String nombDivision=(String) this.tbldivisiones.getValueAt(fila, 1);
+        //this.txtnombredivision1.setText(nombDivision);
+        this.txtnombredivision1.setText(nombDivision);
+        String curso=this.tbldivisiones.getValueAt(fila, 2).toString();
+        this.cbxcurso1.setModel(this.cbxcurso.getModel());
+        this.cbxcurso1.setSelectedItem(curso);
+        String turno=this.tbldivisiones.getValueAt(fila, 3).toString();
+        this.cbxturno1.setModel(this.cbxturno.getModel());
+        this.cbxturno1.setSelectedItem(turno);
+        String prece=this.tbldivisiones.getValueAt(fila, 4).toString();
+        this.cbxpreceptor1.setModel(this.cbxpreceptor.getModel());
+        this.cbxpreceptor1.setSelectedItem(prece);
+        String aula=this.tbldivisiones.getValueAt(fila, 5).toString();
+        this.cbxaula1.setModel(this.cbxaula.getModel());
+        this.cbxaula1.setSelectedItem(aula);
+     
         this.tabdivisiones.getComponent(2).show();
-        this.tabdivisiones.setSelectedIndex(2);*/
+        this.tabdivisiones.setSelectedIndex(2);
     }//GEN-LAST:event_btnlinkmodificarActionPerformed
 
     private void btnagregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnagregarActionPerformed
@@ -377,6 +466,10 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
         this.tabdivisiones.getComponent(0).show();
         this.tabdivisiones.setSelectedIndex(0);*/
     }//GEN-LAST:event_btnmodificarActionPerformed
+
+    private void txtañoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtañoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtañoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -422,25 +515,33 @@ public class AdministrarDivisiones extends javax.swing.JFrame {
     private javax.swing.JButton btnlinkmodificar;
     private javax.swing.JButton btnmodificar;
     private javax.swing.JComboBox<String> cbxaula;
+    private javax.swing.JComboBox<String> cbxaula1;
     private javax.swing.JComboBox<String> cbxcurso;
-    private javax.swing.JComboBox<String> cbxperiodo;
+    private javax.swing.JComboBox<String> cbxcurso1;
     private javax.swing.JComboBox<String> cbxpreceptor;
+    private javax.swing.JComboBox<String> cbxpreceptor1;
     private javax.swing.JComboBox<String> cbxturno;
+    private javax.swing.JComboBox<String> cbxturno1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane tabdivisiones;
-    private javax.swing.JTable tblcursos;
-    private javax.swing.JTextField txtcursomodif;
+    private javax.swing.JTable tbldivisiones;
+    private javax.swing.JTextField txtaño;
     private javax.swing.JTextField txtnombredivision;
+    private javax.swing.JTextField txtnombredivision1;
     // End of variables declaration//GEN-END:variables
 }

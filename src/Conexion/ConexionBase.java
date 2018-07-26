@@ -14,8 +14,8 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class ConexionBase {
-    Connection conn=null;
-    Statement st= null;
+   public static Connection conexion=null;
+   public static Statement st= null;
   
 private static final String driver="com.mysql.jdbc.Driver";
 private static final String user="programadoresisi";
@@ -27,10 +27,10 @@ public ConexionBase () {
         try {
             Class.forName(driver);
            
-                conn=DriverManager.getConnection(url,user,password);
+                conexion=DriverManager.getConnection(url,user,password);
            
       
-            if(conn!=null){
+            if(conexion!=null){
                 
                 JOptionPane.showMessageDialog(null, "Conexion establecida");
             }   } catch (ClassNotFoundException |SQLException ex) {
@@ -38,12 +38,12 @@ public ConexionBase () {
         }
 }
 public Connection getConection (){
-    return conn;   
+    return conexion;   
 }
 
 public void desconectar(){ 
-conn= null;
-    if(conn==null){
+conexion= null;
+    if(conexion==null){
         JOptionPane.showInternalMessageDialog(null, "Conexion terminada" );
     }
 }
